@@ -5,97 +5,83 @@ const { authenticate } = require('../middleware/authMiddleware');
 const boardRouter = Router();
 boardRouter.use(authenticate);
 
-boardRouter.get('/', (req, res) => {
+boardRouter.get('/', async (req, res) => {
     try {
         const userId = req.user.id;
-        const userBoards = boardService.getBoardsByUser(userId);
+        const userBoards = await boardService.getBoardsByUser(userId);
         res.send(userBoards);
     } catch (error) {
         res.status(500).send({ message: 'Error retrieving boards', devMessage: error.message });
     }
 });
 
-boardRouter.get('/:id', (req, res) => {
-    console.log("cur user", req.user);
+boardRouter.get('/:id', async (req, res) => {
     try {
-        const board = boardService.getBoardById(req.params.id);
+        const board = await boardService.getBoardById(req.params.id);
         res.send(board);
     } catch (error) {
-        res.status(404).send({ message: 'Board not found' });
+        res.status(404).send({ message: 'Board not found', devMessage: error.message });
     }
 });
 
-boardRouter.post('/', (req, res) => {
-    const boardData = req.body;
-    const owner = req.user;
+boardRouter.post('/', async (req, res) => {
     try {
-        const newBoard = boardService.addBoard(boardData, owner);
+        const boardData = req.body;
+        const owner = req.user;
+        const newBoard = await boardService.addBoard(boardData, owner);
         res.status(201).send(newBoard);
     } catch (error) {
         res.status(500).send({ message: 'Error adding board', devMessage: error.message });
     }
 });
 
-boardRouter.put('/:id', (req, res) => {
-    const boardId = req.params.id;
-    const boardData = req.body;
+boardRouter.put('/:id', async (req, res) => {
     try {
-        const updatedBoard = boardService.updateBoard(boardId, boardData);
+        const boardId = req.params.id;
+        const boardData = req.body;
+        const updatedBoard = await boardService.updateBoard(boardId, boardData);
         res.send(updatedBoard);
     } catch (error) {
-        res.status(404).send({ message: 'Board not found or update failed' });
+        res.status(404).send({ message: 'Board not found or update failed', devMessage: error.message });
     }
 });
 
-boardRouter.delete('/:id', (req, res) => {
-    const boardId = req.params.id;
+boardRouter.delete('/:id', async (req, res) => {
     try {
-        const deletedBoard = boardService.deleteBoard(boardId);
+        const boardId = req.params.id;
+        const deletedBoard = await boardService.deleteBoard(boardId);
         res.send({ message: 'Board deleted successfully', data: deletedBoard });
     } catch (error) {
-        res.status(404).send({ message: 'Board not found' });
+        res.status(404).send({ message: 'Board not found', devMessage: error.message });
     }
 });
 
-
-boardRouter.post("/:id/tasks", (req, res) => {
-    console.log("cur user", req.body);
+boardRouter.post('/:id/tasks', async (req, res) => {
     try {
-        const task = boardService.createTask(req.params.id, req.body);
+        const task = await boardService.createTask(req.params.id, req.body);
         res.send(task);
     } catch (error) {
-        res.status(404).send({
-            message: "Board not found",
-            devMessage: error.message,
-        });
+        res.status(404).send({ message: 'Board not found', devMessage: error.message });
     }
 });
 
-boardRouter.put("/:id/tasks/:taskId", (req, res) => {
-    const boardId = req.params.id;
-    const taskId = req.params.taskId;
-    const taskData = req.body;
+
+boardRouter.put('/:id/tasks/:taskId', async (req, res) => {
     try {
-        const updatedTask = boardService.updateTask(boardId, taskId, taskData);
+        const updatedTask = await boardService.updateTask(req.params.id, req.params.taskId, req.body);
         res.send(updatedTask);
     } catch (error) {
-        res.status(404).send({
-            message: "Task not found or update failed",
-            devMessage: error.message,
-        });
+        res.status(404).send({ message: 'Task not found or update failed', devMessage: error.message });
     }
 });
-boardRouter.delete("/:id/tasks/:taskId", (req, res) => {
-    const boardId = req.params.id;
-    const taskId = req.params.taskId;
+
+// DELETE task
+boardRouter.delete('/:id/tasks/:taskId', async (req, res) => {
     try {
-        const deletedTask = boardService.deleteTask(boardId, taskId);
-        res.send({ message: "Task deleted successfully", data: deletedTask });
+        const deletedTask = await boardService.deleteTask(req.params.id, req.params.taskId);
+        res.send({ message: 'Task deleted successfully', data: deletedTask });
     } catch (error) {
-        res.status(404).send({
-            message: "Task not found",
-            devMessage: error.message,
-        });
+        res.status(404).send({ message: 'Task not found', devMessage: error.message });
     }
 });
 
