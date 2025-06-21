@@ -1,7 +1,6 @@
 const { v4: uuid } = require('uuid');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const { use } = require('react');
 
 const getAllUsers = async (query = null) => {
     if (query) {
