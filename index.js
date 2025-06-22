@@ -10,10 +10,9 @@ const otpRouter = require('./routes/otpRoutes');
 const app = express();
 const compression = require('compression');
 
-// Apply compression
-app.use(compression());
+// const compression = require('compression');
+// app.use(compression());
 
-// ✅ FIX: Proper CORS config
 app.use(cors({
     origin: ['http://localhost:5173', 'https://taskify-frontend-five.vercel.app'],
     credentials: true,
