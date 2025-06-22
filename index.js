@@ -12,11 +12,13 @@ const compression = require('compression');
 
 app.use(compression());
 
-// ✅ CORS configuration for local and deployed frontend
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://taskify-frontend-five.vercel.app/'],
+    origin: ['http://localhost:5173', 'https://taskify-frontend-five.vercel.app'],
     credentials: true,
 }));
+
+// ✅ Allow preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 
