@@ -5,7 +5,7 @@ const boardSchema = new mongoose.Schema({
     owner: { type: String, required: true }, // user id (uuid)
     title: { type: String, required: true },
     description: { type: String },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
     members: [{
         id: String,
         name: String,

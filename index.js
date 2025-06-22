@@ -10,16 +10,14 @@ const otpRouter = require('./routes/otpRoutes');
 const app = express();
 const compression = require('compression');
 
-// Enable response compression
 app.use(compression());
 
-// ✅ Proper CORS configuration
+// ✅ CORS configuration for local and deployed frontend
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://taskify-frontend.vercel.app'],
+    origin: ['http://localhost:5173', 'https://taskify-frontend-five.vercel.app'],
     credentials: true,
 }));
 
-// Middleware to parse JSON
 app.use(express.json());
 
 // Routes
@@ -27,7 +25,7 @@ app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use('/otp', otpRouter);
 
-// Connect to MongoDB
+// MongoDB connection
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
