@@ -8,7 +8,8 @@ const boardRouter = require('./routes/boardRoutes');
 const otpRouter = require('./routes/otpRoutes');
 
 const app = express();
-
+const compression = require('compression');
+app.use(compression());
 // Middleware
 app.use(cors());
 app.use(express.json());
